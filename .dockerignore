@@ -1,0 +1,8 @@
+makemytour
+make-my-trip-clone-springboot-main
+node_modules
+target
+.idea
+.git
+.github
+*.md

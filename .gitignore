@@ -1,0 +1,27 @@
+# Java / Maven (backend)
+target/
+*.class
+*.jar
+!.mvn/wrapper/maven-wrapper.jar
+
+# Node
+node_modules/
+makemytour/.next/
+makemytour/out/
+
+# Environment / secrets
+*.env
+.env.local
+makemytour/.env.local
+
+# IDE / OS
+.idea/
+*.iml
+.vscode/
+.DS_Store
+
+# Reference clone (not part of this project)
+make-my-trip-clone-springboot-main/
+
+# Old frontend starter backup
+makemytour/_old_starter_backup/
