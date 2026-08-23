@@ -15,7 +15,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { getflight, handleflightbooking } from "@/api";
+import { getflight, handleflightbooking, getpricing } from "@/api";
 import { useDispatch, useSelector } from "react-redux";
 interface Flight {
   id: string; // Unique identifier for the flight
@@ -43,6 +43,13 @@ import Loader from "@/components/Loader";
 import { setUser } from "@/store";
 import SeatMap from "@/components/SeatMap";
 import Reviews from "@/components/Reviews";
+const FALLBACK_IMG =
+  "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='300'><rect width='400' height='300' fill='%23bfdbfe'/></svg>";
+const handleImgError = (e: any) => {
+  e.currentTarget.onerror = null;
+  e.currentTarget.src = FALLBACK_IMG;
+};
+
 const BookFlightPage = () => {
   const router = useRouter();
   const { id } = router.query;
@@ -51,6 +58,7 @@ const BookFlightPage = () => {
   const [quantity, setQuantity] = useState(1);
   const [open, setopem] = useState(false);
   const [seatTotal, setSeatTotal] = useState(0);
+  const [livePrice, setLivePrice] = useState<number | null>(null);
   const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
   const user = useSelector((state: any) => state.user.user);
   const dispatch = useDispatch();
@@ -69,6 +77,15 @@ const BookFlightPage = () => {
     };
     fetchFlights();
   }, [id, user]);
+
+  useEffect(() => {
+    const loadPrice = async () => {
+      const all = await getpricing();
+      const p = (all || []).find((x: any) => x.flightId === id);
+      if (p) setLivePrice(p.currentPrice);
+    };
+    loadPrice();
+  }, [id]);
 
   if (loading) {
     return <Loader />;
@@ -345,7 +362,7 @@ const BookFlightPage = () => {
                 <div>
                   <div className="font-semibold">{flight.flightName}</div>
                   <div className="text-sm text-gray-600">
-                    {flightDetails.flightNo} • {flightDetails.aircraft}
+                    Economy • Non-stop
                   </div>
                 </div>
                 <div className="ml-auto text-sm">
@@ -463,7 +480,8 @@ const BookFlightPage = () => {
                       <img
                         src={hotel.image}
                         alt={hotel.name}
-                        className="w-full h-48 object-cover"
+                        onError={handleImgError}
+                        className="w-full h-48 object-cover bg-blue-100"
                       />
                       <div className="absolute top-3 right-3 bg-white px-2 py-1 rounded-full text-xs font-medium">
                         Best Seller
@@ -504,6 +522,22 @@ const BookFlightPage = () => {
           {/* Fare Summary */}
           <div className="lg:col-span-1">
             <div className="bg-white rounded-xl shadow-sm p-6 sticky top-24">
+              {livePrice != null && (
+                <div className="mb-4 bg-amber-50 border border-amber-200 rounded-lg p-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-amber-800 font-semibold text-sm">
+                      Live Dynamic Price
+                    </span>
+                    <span className="font-bold">
+                      ₹ {livePrice.toLocaleString()}
+                    </span>
+                  </div>
+                  <p className="text-xs text-amber-700 mt-1">
+                    Updates in real time with demand &amp; season. See the Pricing
+                    page to freeze it.
+                  </p>
+                </div>
+              )}
               <h2 className="text-lg font-bold mb-6 flex items-center">
                 <CreditCard className="w-5 h-5 mr-2 text-gray-600" />
                 Fare Summary

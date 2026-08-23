@@ -23,6 +23,13 @@ import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 
 // Categories that search by From -> To
+const FALLBACK_IMG =
+  "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='300'><rect width='400' height='300' fill='%23bfdbfe'/></svg>";
+const handleImgError = (e: any) => {
+  e.currentTarget.onerror = null;
+  e.currentTarget.src = FALLBACK_IMG;
+};
+
 const routeTypes = ["flights", "trains", "buses", "cabs"];
 // Categories that search by a single City / Location
 const cityTypes = ["hotels", "homestays", "holidays"];
@@ -506,7 +513,7 @@ export default function Home() {
 const OfferCard = ({ title, description, imageUrl, onBook }: any) => {
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden">
-      <img src={imageUrl} alt={title} className="w-full h-48 object-cover" />
+      <img src={imageUrl} alt={title} className="w-full h-48 object-cover bg-blue-100" onError={handleImgError} />
       <div className="p-4">
         <h3 className="font-semibold text-lg mb-2">{title}</h3>
         <p className="text-gray-600 text-sm">{description}</p>
@@ -527,7 +534,8 @@ const CollectionCard = ({ title, imageUrl, tag }: any) => {
       <img
         src={imageUrl}
         alt={title}
-        className="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-110"
+        onError={handleImgError}
+        className="w-full h-64 object-cover bg-blue-100 transition-transform duration-300 group-hover:scale-110"
       />
       <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/70">
         <div className="absolute top-4 left-4">
@@ -556,11 +564,13 @@ const DownloadApp = () => {
               src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg"
               alt="App Store"
               className="h-10"
+              onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
             />
             <img
               src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg"
               alt="Play Store"
               className="h-10"
+              onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
             />
           </div>
         </div>
@@ -581,7 +591,8 @@ const WonderCard = ({ title, imageUrl }: any) => {
       <img
         src={imageUrl}
         alt={title}
-        className="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-110"
+        onError={handleImgError}
+        className="w-full h-64 object-cover bg-blue-100 transition-transform duration-300 group-hover:scale-110"
       />
       <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/70">
         <div className="absolute bottom-4 left-4 right-4">

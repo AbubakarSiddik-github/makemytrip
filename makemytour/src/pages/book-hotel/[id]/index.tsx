@@ -40,6 +40,13 @@ import Loader from "@/components/Loader";
 import { setUser } from "@/store";
 import RoomGrid from "@/components/RoomGrid";
 import Reviews from "@/components/Reviews";
+const FALLBACK_IMG =
+  "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='300'><rect width='400' height='300' fill='%23bfdbfe'/></svg>";
+const handleImgError = (e: any) => {
+  e.currentTarget.onerror = null;
+  e.currentTarget.src = FALLBACK_IMG;
+};
+
 const BookHotelPage = () => {
   const [quantity, setQuantity] = useState(1);
   const [roomSurcharge, setRoomSurcharge] = useState(0);
@@ -297,6 +304,7 @@ const BookHotelPage = () => {
                 <img
                   src="https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800"
                   alt="Hotel Main"
+                  onError={handleImgError}
                   className="w-full h-80 object-cover rounded-lg"
                 />
                 <div className="absolute bottom-4 left-4 bg-white/90 px-3 py-1 rounded-full flex items-center space-x-1">
@@ -311,6 +319,7 @@ const BookHotelPage = () => {
                   <img
                     src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800"
                     alt="Hotel Room"
+                  onError={handleImgError}
                     className="w-full h-[152px] object-cover rounded-lg"
                   />
                 </div>
@@ -318,6 +327,7 @@ const BookHotelPage = () => {
                   <img
                     src="https://images.unsplash.com/photo-1587474260584-136574528ed5?auto=format&fit=crop&w=800"
                     alt="Hotel Amenity"
+                  onError={handleImgError}
                     className="w-full h-[152px] object-cover rounded-lg"
                   />
                   <div className="absolute bottom-4 left-4 bg-white/90 px-3 py-1 rounded-full flex items-center space-x-1">

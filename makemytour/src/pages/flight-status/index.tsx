@@ -104,7 +104,8 @@ export default function FlightStatusPage() {
           s.flightName + " — More delay",
           "Now delayed by " + formatDelay(s.delayMinutes) +
             ". Reason: " + (s.reason || "operational") +
-            ". New departure: " + formatTime(s.estimatedDeparture)
+            ". New departure: " + formatTime(s.estimatedDeparture) +
+            ", est. arrival: " + formatTime(s.estimatedArrival)
         );
       }
     });
