@@ -43,6 +43,7 @@ import Loader from "@/components/Loader";
 import { setUser } from "@/store";
 import SeatMap from "@/components/SeatMap";
 import Reviews from "@/components/Reviews";
+import BackButton from "@/components/BackButton";
 const FALLBACK_IMG =
   "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='300'><rect width='400' height='300' fill='%23bfdbfe'/></svg>";
 const handleImgError = (e: any) => {
@@ -324,6 +325,7 @@ const BookFlightPage = () => {
   return (
     <div className="min-h-screen bg-[#f4f7fa]">
       <div className="max-w-7xl mx-auto px-4 py-8">
+        <BackButton />
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">

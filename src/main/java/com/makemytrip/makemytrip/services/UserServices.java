@@ -41,6 +41,9 @@ public class UserServices{
             user.setFirstName(updatedUser.getFirstName());
             user.setLastName(updatedUser.getLastName());
             user.setPhoneNumber(updatedUser.getPhoneNumber());
+            if (updatedUser.getGender() != null) {
+                user.setGender(updatedUser.getGender());
+            }
             return userRepository.save(user);
         }
         return null;

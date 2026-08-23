@@ -20,6 +20,7 @@ const SignupDialog = ({trigger, defaultLogin}:any) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [gender, setGender] = useState("");
   const [open, setopem] = useState(false);
   const dispatch = useDispatch();
   const handleAuth = async (e: React.FormEvent) => {
@@ -31,7 +32,8 @@ const SignupDialog = ({trigger, defaultLogin}:any) => {
           lastName,
           email,
           phoneNumber,
-          password
+          password,
+          gender
         );
         dispatch(setUser(signin));
         setopem(false);
@@ -62,6 +64,7 @@ const SignupDialog = ({trigger, defaultLogin}:any) => {
     setEmail("");
     setPassword("");
     setPhoneNumber("");
+    setGender("");
   };
   return (
     <Dialog open={open} onOpenChange={setopem}>
@@ -132,6 +135,21 @@ const SignupDialog = ({trigger, defaultLogin}:any) => {
                 onChange={(e) => setPhoneNumber(e.target.value)}
                 required
               />
+            </div>
+          )}
+          {isSignup && (
+            <div className="space-y-2">
+              <Label htmlFor="gender">Gender</Label>
+              <select
+                id="gender"
+                value={gender}
+                onChange={(e) => setGender(e.target.value)}
+                className="w-full border rounded-lg px-3 py-2"
+              >
+                <option value="">Select...</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+              </select>
             </div>
           )}
           <Button

@@ -18,6 +18,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
 import { clearUser, setUser } from "@/store";
 import { editprofile, cancelbooking } from "@/api";
+import BackButton from "@/components/BackButton";
 const index = () => {
   const dispatch = useDispatch();
   const user = useSelector((state: any) => state.user.user);
@@ -25,6 +26,7 @@ const index = () => {
   const [now, setNow] = useState(0);
   const [cancelIndex, setCancelIndex] = useState<number | null>(null);
   const [selectedReason, setSelectedReason] = useState("");
+  const [cancelling, setCancelling] = useState(false);
   useEffect(() => {
     setNow(Date.now());
     const t = setInterval(() => setNow(Date.now()), 1000);
@@ -43,13 +45,15 @@ const index = () => {
       alert("Please select a reason for cancellation.");
       return;
     }
+    setCancelling(true);
     const updated = await cancelbooking(user?.id, i, selectedReason);
+    setCancelling(false);
     if (updated) {
       dispatch(setUser(updated));
       setCancelIndex(null);
       setSelectedReason("");
     } else {
-      alert("Cancellation failed. Make sure the backend is running.");
+      alert("Cancellation failed. Please try again in a moment.");
     }
   };
 
@@ -63,6 +67,7 @@ const index = () => {
     lastName: user?.lastName ? user?.lastName : "",
     email: user?.email ? user?.email : "",
     phoneNumber: user?.phoneNumber ? user?.phoneNumber : "",
+    gender: user?.gender ? user?.gender : "",
     bookings: [
       {
         type: "Flight",
@@ -99,7 +104,8 @@ const index = () => {
         userData.firstName,
         userData.lastName,
         userData.email,
-        userData.phoneNumber
+        userData.phoneNumber,
+        userData.gender
       );
       dispatch(setUser(data));
       setIsEditing(false);
@@ -125,6 +131,7 @@ const index = () => {
   return (
     <div className="min-h-screen bg-gray-50 pt-8 px-4">
       <div className="max-w-6xl mx-auto">
+        <BackButton />
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Profile Section */}
           <div className="md:col-span-1">
@@ -140,6 +147,24 @@ const index = () => {
                     <span>Edit</span>
                   </button>
                 )}
+              </div>
+              <div className="flex justify-center mb-4">
+                <div
+                  className={
+                    "w-24 h-24 rounded-full flex items-center justify-center text-5xl font-bold " +
+                    (user?.gender === "Female"
+                      ? "bg-pink-100 text-pink-600"
+                      : user?.gender === "Male"
+                      ? "bg-blue-100 text-blue-600"
+                      : "bg-gray-100 text-gray-500")
+                  }
+                >
+                  {user?.gender === "Female"
+                    ? "\u2640"
+                    : user?.gender === "Male"
+                    ? "\u2642"
+                    : user?.firstName?.charAt(0) || "?"}
+                </div>
               </div>
 
               {isEditing ? (
@@ -188,6 +213,20 @@ const index = () => {
                       onChange={(e) => handleEditFormChange("phoneNumber", e.target.value)}
                       className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
                     />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Gender
+                    </label>
+                    <select
+                      value={userData.gender}
+                      onChange={(e) => handleEditFormChange("gender", e.target.value)}
+                      className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                    >
+                      <option value="">Select...</option>
+                      <option value="Male">Male</option>
+                      <option value="Female">Female</option>
+                    </select>
                   </div>
                   <div className="flex space-x-3">
                     <button
@@ -327,9 +366,10 @@ const index = () => {
                                 <div className="flex gap-2">
                                   <button
                                     onClick={() => doCancel(index)}
-                                    className="flex-1 bg-red-600 text-white py-2 rounded-lg hover:bg-red-700"
+                                    disabled={cancelling}
+                                    className="flex-1 bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 disabled:opacity-60"
                                   >
-                                    Confirm Cancellation
+                                    {cancelling ? "Cancelling..." : "Confirm Cancellation"}
                                   </button>
                                   <button
                                     onClick={() => {

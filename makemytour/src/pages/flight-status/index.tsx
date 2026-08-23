@@ -1,5 +1,6 @@
 import { getflightstatus } from "@/api";
 import { Button } from "@/components/ui/button";
+import BackButton from "@/components/BackButton";
 import { Bell, Plane, Clock, MapPin, AlertTriangle } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
@@ -162,6 +163,7 @@ export default function FlightStatusPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <main className="container mx-auto px-4 py-8 max-w-6xl">
+        <BackButton />
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
           <div>
             <h1 className="text-2xl sm:text-3xl font-bold flex items-center gap-2">

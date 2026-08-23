@@ -1,5 +1,6 @@
 import { getpricing, freezeprice, getfreezes } from "@/api";
 import { Button } from "@/components/ui/button";
+import BackButton from "@/components/BackButton";
 import { TrendingUp, TrendingDown, Minus, Lock, Flame } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -122,6 +123,7 @@ export default function PricingPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <main className="container mx-auto px-4 py-8 max-w-6xl">
+        <BackButton />
         <h1 className="text-2xl sm:text-3xl font-bold mb-1">Dynamic Pricing</h1>
         <p className="text-gray-500 text-sm mb-6">
           Prices update in real time based on demand and season. Peak days and

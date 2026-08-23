@@ -14,6 +14,7 @@ public class Users {
     private String password;
     private String role;
     private String phoneNumber;
+    private String gender;
     private List<Booking> bookings = new ArrayList<>();;
 
 
@@ -36,6 +37,8 @@ public class Users {
     public String getPhoneNumber() {
         return phoneNumber;
     }
+    public String getGender() { return gender; }
+    public void setGender(String gender) { this.gender = gender; }
     public String getPassword() {return password;}
     public String getEmail() {return email;}
     public void setEmail(String email) {this.email = email;}

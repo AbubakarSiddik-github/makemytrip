@@ -2,6 +2,7 @@ import { getflaggedreviews, removereview, keepreview } from "@/api";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { Star, ShieldAlert, Trash2, Check } from "lucide-react";
+import BackButton from "@/components/BackButton";
 
 const Stars = ({ value }: any) => (
   <span className="inline-flex">
@@ -59,6 +60,7 @@ export default function Moderation() {
   return (
     <div className="min-h-screen bg-gray-50">
       <main className="container mx-auto px-4 py-8 max-w-4xl">
+        <BackButton />
         <h1 className="text-2xl font-bold mb-1 flex items-center gap-2">
           <ShieldAlert className="w-6 h-6 text-red-600" /> Review Moderation
         </h1>

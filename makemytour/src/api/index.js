@@ -19,7 +19,8 @@ export const signup = async (
   lastName,
   email,
   phoneNumber,
-  password
+  password,
+  gender
 ) => {
   try {
     const res = await axios.post(`${BACKEND_URL}/user/signup`, {
@@ -28,6 +29,7 @@ export const signup = async (
       email,
       phoneNumber,
       password,
+      gender,
     });
     const data = res.data;
     // console.log(data);
@@ -52,7 +54,8 @@ export const editprofile = async (
   firstName,
   lastName,
   email,
-  phoneNumber
+  phoneNumber,
+  gender
 ) => {
   try {
     const res = await axios.post(`${BACKEND_URL}/user/edit?id=${id}`, {
@@ -60,6 +63,7 @@ export const editprofile = async (
       lastName,
       email,
       phoneNumber,
+      gender,
     });
     const data = res.data;
     return data;
