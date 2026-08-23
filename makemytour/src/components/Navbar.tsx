@@ -36,6 +36,13 @@ const Navbar = () => {
       <Button
         variant="ghost"
         className="text-black hover:text-blue-600 justify-start"
+        onClick={() => go("/")}
+      >
+        Home
+      </Button>
+      <Button
+        variant="ghost"
+        className="text-black hover:text-blue-600 justify-start"
         onClick={() => go("/flight-status")}
       >
         Flight Status

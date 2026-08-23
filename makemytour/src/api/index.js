@@ -256,10 +256,14 @@ export const cancelbooking = async (userId, index, reason) => {
     const res = await axios.post(
       `${BACKEND_URL}/booking/cancel?userId=${encodeURIComponent(userId)}&index=${index}&reason=${encodeURIComponent(reason)}`
     );
-    return res.data;
+    return { success: true, user: res.data };
   } catch (error) {
-    console.log(error);
-    return null;
+    const msg =
+      (error && error.response && error.response.data && error.response.data.error) ||
+      (error && error.message) ||
+      "Unknown error";
+    console.log("cancel error:", msg, error);
+    return { success: false, error: msg };
   }
 };
 

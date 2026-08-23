@@ -46,14 +46,17 @@ const index = () => {
       return;
     }
     setCancelling(true);
-    const updated = await cancelbooking(user?.id, i, selectedReason);
+    const res = await cancelbooking(user?.id, i, selectedReason);
     setCancelling(false);
-    if (updated) {
-      dispatch(setUser(updated));
+    if (res && res.success) {
+      dispatch(setUser(res.user));
       setCancelIndex(null);
       setSelectedReason("");
     } else {
-      alert("Cancellation failed. Please try again in a moment.");
+      alert(
+        "Cancellation failed: " +
+          (res && res.error ? res.error : "please try again in a moment.")
+      );
     }
   };
 
