@@ -12,7 +12,18 @@ import {
   Sparkles,
 } from "lucide-react";
 
+const REC_GRADIENTS = [
+  "from-blue-500 to-indigo-600",
+  "from-sky-500 to-blue-600",
+  "from-cyan-500 to-teal-600",
+  "from-indigo-500 to-purple-600",
+  "from-blue-600 to-cyan-500",
+  "from-violet-500 to-blue-600",
+];
+
 function RecCard({ rec, userId, onDismiss, router }: any) {
+  const grad =
+    REC_GRADIENTS[((rec.title || "").length + (rec.refId || "").length) % REC_GRADIENTS.length];
   const [showReason, setShowReason] = useState(false);
   const [feedback, setFeedback] = useState<string | null>(null);
 
@@ -48,7 +59,7 @@ function RecCard({ rec, userId, onDismiss, router }: any) {
           }}
         />
       ) : (
-        <div className="h-20 bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
+        <div className={"h-20 bg-gradient-to-br flex items-center justify-center " + grad}>
           {rec.type === "flight" ? (
             <Plane className="w-8 h-8 text-white" />
           ) : rec.type === "hotel" ? (

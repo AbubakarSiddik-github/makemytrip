@@ -53,6 +53,15 @@ public class RecommendationService {
         new Dest("Singapore", "city", "https://images.unsplash.com/photo-1525625293386-3f8f99389edd?auto=format&fit=crop&w=800", "Gardens, food & city life")
     );
 
+    private static final String[] TREND_REASONS = {
+        "Trending now - popular with travelers this week.",
+        "Great value fare on a popular route.",
+        "Frequently booked by travelers like you.",
+        "Top pick - one of our best-selling routes.",
+        "Hot deal - limited seats left at this price.",
+        "Popular this season - book before it fills up."
+    };
+
     public List<Recommendation> generate(String userId) {
         Users user = (userId != null && !userId.isEmpty())
                 ? userRepository.findById(userId).orElse(null) : null;
@@ -216,7 +225,7 @@ public class RecommendationService {
                 if (recs.stream().anyMatch(r -> r.getRecKey().equals(key))) continue;
                 Recommendation r = base(key, "flight", f.getId(), f.getFlightName() + " to " + f.getTo(), f.getFrom() + " to " + f.getTo());
                 r.setPrice(f.getPrice());
-                r.setReason("Trending now - popular with travelers this week.");
+                r.setReason(TREND_REASONS[recs.size() % TREND_REASONS.length]);
                 r.setScore(1);
                 recs.add(r);
                 if (recs.size() >= 8) break;
