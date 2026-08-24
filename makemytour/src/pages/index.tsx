@@ -1,5 +1,4 @@
 import { getflight, gethotel } from "@/api";
-import Loader from "@/components/Loader";
 import { SearchSelect } from "@/components/SearchSelect";
 import Recommendations from "@/components/Recommendations";
 import { Button } from "@/components/ui/button";
@@ -9,6 +8,7 @@ import {
   Car,
   CreditCard,
   HomeIcon,
+  Loader2,
   Hotel,
   MapPin,
   Plane,
@@ -208,9 +208,6 @@ export default function Home() {
     return sampleData[type] || [];
   };
 
-  if (loading) {
-    return <Loader />;
-  }
 
   const handlesearch = () => {
     setsearched(true);
@@ -363,7 +360,16 @@ export default function Home() {
             <h2 className="text-xl font-semibold mb-4 text-gray-800 capitalize">
               {bookingtype} Results
             </h2>
-            {shownResults.length > 0 ? (
+            {loading &&
+            (bookingtype === "flights" || bookingtype === "hotels") ? (
+              <div className="flex items-center gap-2 text-gray-600 py-2">
+                <Loader2 className="animate-spin w-5 h-5 text-blue-600" />
+                <span>
+                  Loading {bookingtype}... (first load can take a few seconds
+                  while the server wakes up)
+                </span>
+              </div>
+            ) : shownResults.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {shownResults.map((result: any) => (
                   <div
