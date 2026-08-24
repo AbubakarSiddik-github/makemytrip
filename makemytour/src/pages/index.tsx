@@ -266,7 +266,7 @@ export default function Home() {
     setto("");
   };
 
-  const shownResults = searched ? searchresults : getDataForType(bookingtype);
+  const shownResults = searched ? searchresults : [];
   const showFrom = routeTypes.includes(bookingtype);
   const showTo = routeTypes.includes(bookingtype) || cityTypes.includes(bookingtype);
   const toLabel = routeTypes.includes(bookingtype)
@@ -360,8 +360,13 @@ export default function Home() {
             <h2 className="text-xl font-semibold mb-4 text-gray-800 capitalize">
               {bookingtype} Results
             </h2>
-            {loading &&
-            (bookingtype === "flights" || bookingtype === "hotels") ? (
+            {!searched ? (
+              <p className="text-gray-600">
+                Enter your details above and press SEARCH to see available{" "}
+                {bookingtype}.
+              </p>
+            ) : loading &&
+              (bookingtype === "flights" || bookingtype === "hotels") ? (
               <div className="flex items-center gap-2 text-gray-600 py-2">
                 <Loader2 className="animate-spin w-5 h-5 text-blue-600" />
                 <span>
@@ -453,9 +458,7 @@ export default function Home() {
               </div>
             ) : (
               <p className="text-gray-600">
-                {searched
-                  ? "Result not found. Please try different options."
-                  : "No " + bookingtype + " available right now."}
+                Result not found. Please try different options.
               </p>
             )}
           </div>

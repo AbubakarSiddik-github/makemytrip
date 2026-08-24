@@ -21,9 +21,29 @@ const REC_GRADIENTS = [
   "from-violet-500 to-blue-600",
 ];
 
+const CITY_IMAGES: any = {
+  Mumbai: "https://images.unsplash.com/photo-1529253355930-ddbe423a2ac7?auto=format&fit=crop&w=800",
+  Delhi: "https://images.unsplash.com/photo-1587474260584-136574528ed5?auto=format&fit=crop&w=800",
+  Bengaluru: "https://images.unsplash.com/photo-1596176530529-78163a4f7af2?auto=format&fit=crop&w=800",
+  Hyderabad: "https://images.unsplash.com/photo-1572445271230-a78b5944a659?auto=format&fit=crop&w=800",
+  Chennai: "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=800",
+  Kolkata: "https://images.unsplash.com/photo-1558431382-27e303142255?auto=format&fit=crop&w=800",
+  Goa: "https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?auto=format&fit=crop&w=800",
+  Pune: "https://images.unsplash.com/photo-1553064744-9cb4f8f5f0f4?auto=format&fit=crop&w=800",
+  Jaipur: "https://images.unsplash.com/photo-1599661046289-e31897846e41?auto=format&fit=crop&w=800",
+  Kochi: "https://images.unsplash.com/photo-1590050752117-238cb0fb12b1?auto=format&fit=crop&w=800",
+  Shimla: "https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?auto=format&fit=crop&w=800",
+  Srinagar: "https://images.unsplash.com/photo-1595815771614-ade9d652a65d?auto=format&fit=crop&w=800",
+};
+const GENERIC_TRAVEL_IMG =
+  "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=800";
+
 function RecCard({ rec, userId, onDismiss, router }: any) {
   const grad =
     REC_GRADIENTS[((rec.title || "").length + (rec.refId || "").length) % REC_GRADIENTS.length];
+  const sub = rec.subtitle || "";
+  const city = sub.includes(" to ") ? sub.split(" to ").pop().trim() : sub.trim();
+  const cardImg = rec.image || CITY_IMAGES[city] || GENERIC_TRAVEL_IMG;
   const [showReason, setShowReason] = useState(false);
   const [feedback, setFeedback] = useState<string | null>(null);
 
@@ -49,26 +69,26 @@ function RecCard({ rec, userId, onDismiss, router }: any) {
 
   return (
     <div className="bg-white rounded-xl shadow-sm border overflow-hidden flex flex-col">
-      {rec.type === "destination" && rec.image ? (
+      <div className={"relative h-32 bg-gradient-to-br " + grad}>
         <img
-          src={rec.image}
+          src={cardImg}
           alt={rec.title}
           className="w-full h-32 object-cover"
           onError={(e) => {
-            (e.target as HTMLImageElement).style.display = "none";
+            (e.currentTarget as HTMLImageElement).style.display = "none";
           }}
         />
-      ) : (
-        <div className={"h-20 bg-gradient-to-br flex items-center justify-center " + grad}>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+        <div className="absolute top-2 left-2 bg-white/90 rounded-full p-1.5 shadow">
           {rec.type === "flight" ? (
-            <Plane className="w-8 h-8 text-white" />
+            <Plane className="w-4 h-4 text-blue-600" />
           ) : rec.type === "hotel" ? (
-            <Building2 className="w-8 h-8 text-white" />
+            <Building2 className="w-4 h-4 text-green-600" />
           ) : (
-            <MapPin className="w-8 h-8 text-white" />
+            <MapPin className="w-4 h-4 text-rose-600" />
           )}
         </div>
-      )}
+      </div>
       <div className="p-4 flex-1 flex flex-col">
         <div className="flex items-start justify-between gap-1">
           <h3 className="font-bold text-sm">{rec.title}</h3>
