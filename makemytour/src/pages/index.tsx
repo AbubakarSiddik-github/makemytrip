@@ -1,6 +1,11 @@
 import { getflight, gethotel } from "@/api";
 import { SearchSelect } from "@/components/SearchSelect";
 import Recommendations from "@/components/Recommendations";
+import FlashSaleBanner from "@/components/FlashSaleBanner";
+import PickAVibe from "@/components/PickAVibe";
+import DealsSection from "@/components/DealsSection";
+import WishlistButton from "@/components/WishlistButton";
+import RatingBadge from "@/components/RatingBadge";
 import { Button } from "@/components/ui/button";
 import {
   Bus,
@@ -91,6 +96,7 @@ export default function Home() {
   const [loading, setloading] = useState(true);
   const [flight, setflight] = useState<any[]>([]);
   const [searched, setsearched] = useState(false);
+  const [tripType, setTripType] = useState("round");
   const user = useSelector((state: any) => state.user.user);
   const router = useRouter();
 
@@ -266,6 +272,14 @@ export default function Home() {
     setto("");
   };
 
+  const handleVibePick = (city: string) => {
+    setbookingtype("hotels");
+    setto(city);
+    setsearched(false);
+    if (typeof window !== "undefined")
+      window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   const shownResults = searched ? searchresults : [];
   const showFrom = routeTypes.includes(bookingtype);
   const showTo = routeTypes.includes(bookingtype) || cityTypes.includes(bookingtype);
@@ -283,6 +297,7 @@ export default function Home() {
           'url("https://images.unsplash.com/photo-1464037866556-6812c9d1c72e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2940&q=80")',
       }}
     >
+      <FlashSaleBanner />
       <main className="container mx-auto px-4 py-6">
         <nav className="bg-white rounded-xl shadow-lg mx-auto max-w-5xl mb-6 p-4 overflow-x-auto">
           <div className="flex justify-between items-center min-w-max space-x-8">
@@ -299,6 +314,28 @@ export default function Home() {
         </nav>
 
         <div className="bg-white rounded-xl shadow-lg mx-auto max-w-5xl p-6">
+          {bookingtype === "flights" && (
+            <div className="flex flex-wrap gap-2 mb-4">
+              {[
+                { k: "round", label: "Round trip" },
+                { k: "oneway", label: "One way" },
+                { k: "multi", label: "Multi-city" },
+              ].map((t) => (
+                <button
+                  key={t.k}
+                  onClick={() => setTripType(t.k)}
+                  className={
+                    "px-3 py-1 rounded-full text-sm font-medium " +
+                    (tripType === t.k
+                      ? "bg-blue-600 text-white"
+                      : "bg-gray-100 text-gray-700 hover:bg-gray-200")
+                  }
+                >
+                  {t.label}
+                </button>
+              ))}
+            </div>
+          )}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
             {showFrom && (
               <div className="col-span-1">
@@ -379,8 +416,21 @@ export default function Home() {
                 {shownResults.map((result: any) => (
                   <div
                     key={result.id}
-                    className="bg-white rounded-lg shadow p-4 border border-gray-200"
+                    className="relative bg-white rounded-lg shadow p-4 border border-gray-200"
                   >
+                    <div className="absolute top-2 right-2 z-10">
+                      <WishlistButton
+                        item={{
+                          id: result.id,
+                          type: bookingtype,
+                          title: result.flightName || result.hotelName,
+                          subtitle: result.from
+                            ? result.from + " to " + result.to
+                            : result.location,
+                          price: result.price ?? result.pricePerNight,
+                        }}
+                      />
+                    </div>
                     {bookingtype === "flights" ? (
                       <>
                         <p className="font-semibold text-lg">
@@ -389,6 +439,7 @@ export default function Home() {
                         <h3 className="font-semibold text-lg">
                           {result.from} to {result.to}
                         </h3>
+                        <RatingBadge id={result.id} />
                         <p className="text-gray-600">
                           Departure: {formatDate(result.departureTime)}
                         </p>
@@ -409,6 +460,7 @@ export default function Home() {
                           {result.hotelName}
                         </h3>
                         <p className="text-gray-600">City: {result.location}</p>
+                        <RatingBadge id={result.id} />
                         <p className="text-lg font-bold mt-2">
                           ₹{result.pricePerNight} per night
                         </p>
@@ -465,6 +517,8 @@ export default function Home() {
         </div>
         <div className="max-w-7xl mx-auto px-4">
           <Recommendations />
+          <DealsSection />
+          <PickAVibe onPick={handleVibePick} />
 
           {/* Offers Section */}
           <section className="my-16">

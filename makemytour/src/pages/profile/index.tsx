@@ -13,11 +13,14 @@ import {
   Plane,
   Building2,
   Ban,
+  Heart,
+  Trash2,
 } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
 import { clearUser, setUser } from "@/store";
 import { editprofile, cancelbooking } from "@/api";
+import { getWishlist } from "@/components/WishlistButton";
 import BackButton from "@/components/BackButton";
 const index = () => {
   const dispatch = useDispatch();
@@ -27,6 +30,22 @@ const index = () => {
   const [cancelIndex, setCancelIndex] = useState<number | null>(null);
   const [selectedReason, setSelectedReason] = useState("");
   const [cancelling, setCancelling] = useState(false);
+  const [saved, setSaved] = useState<any[]>([]);
+  useEffect(() => {
+    const load = () => setSaved(getWishlist());
+    load();
+    window.addEventListener("wishlist-changed", load);
+    return () => window.removeEventListener("wishlist-changed", load);
+  }, []);
+  const removeSaved = (id: any) => {
+    try {
+      localStorage.setItem(
+        "wishlist",
+        JSON.stringify(getWishlist().filter((w: any) => w.id !== id))
+      );
+    } catch (e) {}
+    window.dispatchEvent(new Event("wishlist-changed"));
+  };
   useEffect(() => {
     setNow(Date.now());
     const t = setInterval(() => setNow(Date.now()), 1000);
@@ -285,6 +304,48 @@ const index = () => {
           {/* Bookings Section */}
           <div className="md:col-span-2">
             <div className="bg-white rounded-xl shadow-lg p-6">
+              {saved.length > 0 && (
+                <div className="mb-8">
+                  <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
+                    <Heart className="w-6 h-6 text-red-500 fill-red-500" /> Saved
+                  </h2>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {saved.map((w: any) => (
+                      <div key={w.type + w.id} className="border rounded-lg p-3">
+                        <div className="flex items-start justify-between">
+                          <div>
+                            <p className="font-semibold">{w.title}</p>
+                            <p className="text-xs text-gray-500">{w.subtitle}</p>
+                            {w.price != null && (
+                              <p className="text-sm font-bold mt-1">
+                                ₹{Number(w.price).toLocaleString("en-IN")}
+                              </p>
+                            )}
+                          </div>
+                          <button
+                            onClick={() => removeSaved(w.id)}
+                            className="text-gray-400 hover:text-red-600"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                        <button
+                          onClick={() =>
+                            router.push(
+                              (w.type === "flights" || w.type === "flight"
+                                ? "/book-flight/"
+                                : "/book-hotel/") + w.id
+                            )
+                          }
+                          className="w-full mt-2 bg-blue-600 text-white py-1.5 rounded-lg text-sm hover:bg-blue-700"
+                        >
+                          Book Now
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
               <h2 className="text-2xl font-bold mb-6">My Bookings</h2>
               <div className="space-y-6">
                 {user?.bookings && user.bookings.length > 0 ? (
